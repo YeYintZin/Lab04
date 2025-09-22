@@ -1,9 +1,11 @@
 package lab04_yeyintzin;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -54,30 +56,56 @@ public class Lab04_YeYintZin extends Application {
         root.add(registrationLabel, 0, 6);
 
         TextField lodging = new TextField();
-        Label lodgingLabel = new Label("Lodging Charges:");
+        Label lodgingLabel = new Label("Lodging Charges/Night :");
         root.add(lodging, 1, 7);
         root.add(lodgingLabel, 0, 7);
+        
+        EventHandler gray = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                if (!carRental.getText().isEmpty()) {
+                    miles.setDisable(true);
+                } else {
+                    miles.setDisable(false);
+                }
+            
+                if (!miles.getText().isEmpty()) {
+                    carRental.setDisable(true);
+                } else {
+                    carRental.setDisable(false);
+                }
+            }
+        };
         
         Label expenses = new Label("");
         Label allowableExpenses = new Label("");
         Label excess = new Label("");                   
         Button button = new Button("Calculate");
         button.setOnAction(e -> {
+            double num;
+            double totalAllowed;
+            if (!carRental.getText().isEmpty()) {
+                num = Integer.parseInt(carRental.getText());
+                totalAllowed = 0;
+            } else {
+                num = Integer.parseInt(miles.getText()) * 0.27;
+                totalAllowed = num;
+            }
+            
             double totalExpenses = 
                 Integer.parseInt(airfare.getText()) +
-                Integer.parseInt(carRental.getText()) +
-                0.27 *  (Integer.parseInt(miles.getText())) +
+                num +
                 Integer.parseInt(parking.getText()) +
                 Integer.parseInt(taxi.getText()) +
                 Integer.parseInt(registration.getText()) +
                 Integer.parseInt(lodging.getText());
-            expenses.setText(
+                expenses.setText(
                 "The total expense is " +
                 totalExpenses +
                 "$"
             );
             
-            double totalAllowed = 162 * Integer.parseInt(days.getText()) + (0.27 * Integer.parseInt(miles.getText()));
+            totalAllowed += 162 * Integer.parseInt(days.getText());
             allowableExpenses.setText(
                     "The total allowable expense is "
                     + totalAllowed 
@@ -102,6 +130,9 @@ public class Lab04_YeYintZin extends Application {
         root.add(expenses, 0, 9);
         root.add(allowableExpenses, 0, 10);
         root.add(excess, 0, 11);
+        
+        carRental.setOnKeyReleased(gray);
+        miles.setOnKeyReleased(gray);
         
         Scene scene = new Scene(root, 900, 600);
         scene.getStylesheets().add("demo2.css");
