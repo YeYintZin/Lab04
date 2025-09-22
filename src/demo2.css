@@ -1,0 +1,14 @@
+.label {
+   -fx-font-family: cursive;
+   -fx-font-size: 14pt;
+   -fx-font-style: italic;
+   -fx-background-color: white;
+}
+
+.button {
+   -fx-color: black;
+}
+
+.root {
+   -fx-background-color: lightgrey;
+}
